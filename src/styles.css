@@ -5,11 +5,47 @@
   font-size: 15px;
   line-height: 24px;
   font-weight: 400;
-  color: var(--color-text);
-  background-color: var(--color-primary);
+  color: var(--color-foreground);
 }
 
 body {
+  margin: 0;
+  overflow: auto;
+}
+#app {
+  height: 100%;
+}
+
+*::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 0;
+  height: 0;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: -1000px;
+  left: -1000px;
+  right: -1000px;
+  bottom: -1000px;
+  background-color: var(--color-background);
+  z-index: -1;
+  opacity: 0.9;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin: 0;
 }
 

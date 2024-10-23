@@ -8,6 +8,8 @@ import * as svelteTransition from "svelte/transition";
 import * as svelteEasing from "svelte/easing";
 import * as svelteAnimate from "svelte/animate";
 
+import * as sharedComponents from "@/shared/components/shared";
+
 export const compile = async (
   source: string
 ): Promise<{ Component: typeof svelte.SvelteComponent; css: string }> => {
@@ -17,7 +19,7 @@ export const compile = async (
       res.replace("import", "const")
     )
     .replace(
-      /} from ".*"/gim,
+      /} from ("|').*("|')/gim,
       (res) => res.replace("} from ", "} = require(") + ")"
     )
     .replace('import "svelte/internal/disclose-version";', "")
@@ -39,6 +41,8 @@ export const compile = async (
         return svelteEasing;
       case "svelte/animate":
         return svelteAnimate;
+      case "@dashbroad/components":
+        return sharedComponents;
       default:
         return {};
     }

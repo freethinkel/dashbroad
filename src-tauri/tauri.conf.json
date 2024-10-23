@@ -7,8 +7,8 @@
     "withGlobalTauri": false
   },
   "package": {
-    "productName": "dashbroad",
-    "version": "0.0.0"
+    "productName": "Dashbroad",
+    "version": "0.0.1"
   },
   "tauri": {
     "macOSPrivateApi": true,
@@ -24,16 +24,13 @@
       },
       "fs": {
         "all": true,
-        "scope": [
-          "$HOME/.config/dashbroad/*",
-          "$HOME/.config/dashbroad"
-        ]
+        "scope": ["$HOME/.config/dashbroad/*", "$HOME/.config/dashbroad"]
       }
     },
     "bundle": {
       "active": true,
       "targets": "all",
-      "identifier": "com.tauri.dev",
+      "identifier": "dev.freethinkel.dashbroad",
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",
@@ -54,6 +51,7 @@
         "height": 600,
         "focus": true,
         "alwaysOnTop": true,
+        "transparent": true,
         "visible": false
       }
     ]

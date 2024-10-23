@@ -1,11 +1,12 @@
 <script lang="ts">
   import { compile } from "./compiler";
-  import { onMount } from "svelte";
+  import { SvelteComponent, onMount } from "svelte";
 
   export let code = "";
 
   let widgetEl: HTMLDivElement;
   let errorMessage = "";
+  let component: SvelteComponent;
 
   const render = async (code: string) => {
     try {
@@ -14,7 +15,7 @@
       }
       errorMessage = "";
       await compile(code).then(({ Component }) => {
-        new Component({ target: widgetEl, props: { onMount } });
+        component = new Component({ target: widgetEl, props: { onMount } });
       });
     } catch (err: any) {
       console.log(err);
@@ -26,7 +27,7 @@
 </script>
 
 <div class="wrapper">
-  <div class="widget" bind:this={widgetEl} />
+  <div class="widget" class:__hidden={component?.hidden} bind:this={widgetEl} />
   {#if errorMessage}
     <div class="error-message">{errorMessage}</div>
   {/if}
@@ -34,13 +35,24 @@
 
 <style>
   .wrapper {
-    overflow: hidden;
     height: 100%;
+    animation: fix_rerender_styles infinite alternate 1s;
   }
   .widget {
     height: 100%;
   }
   .error-message {
     color: var(--color-error);
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+
+  @keyframes fix_rerender_styles {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.000001);
+    }
   }
 </style>

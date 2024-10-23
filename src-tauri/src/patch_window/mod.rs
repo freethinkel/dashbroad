@@ -33,9 +33,6 @@ pub fn patch_statusbar_window(window: Window) {
             ns_window.setShowsResizeIndicator_(NO);
             ns_window.setTitleVisibility_(NSWindowTitleVisibility::NSWindowTitleHidden);
             ns_window.setLevel_((NSMainMenuWindowLevel + 1) as i64);
-            ns_window.setCollectionBehavior_(
-                NSWindowCollectionBehavior::NSWindowCollectionBehaviorCanJoinAllSpaces,
-            );
             // ns_window.setHidesOnDeactivate_(YES);
         }
     }

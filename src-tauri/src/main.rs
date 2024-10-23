@@ -4,9 +4,11 @@
 use patch_window::patch_statusbar_window;
 use tauri::{ActivationPolicy, Manager, SystemTray, SystemTrayEvent};
 
+mod commands;
 mod data;
 mod patch_window;
 
+use commands::get_location;
 use data::Rect;
 
 fn main() {
@@ -20,6 +22,8 @@ fn main() {
             app.windows().iter().for_each(|(_, window)| {
                 patch_statusbar_window(window.clone());
             });
+
+            // app.tray_handle().set_icon_as_template(is_template);
 
             Ok(())
         })
@@ -38,6 +42,7 @@ fn main() {
             }
             _ => {}
         })
+        .plugin(tauri_plugin_fs_watch::init())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

@@ -1,42 +1,47 @@
 import type { Palette } from "../types";
-import Color from "colorjs.io";
-import { atom } from "nanostores";
+import { transparentize } from "polished";
+import { computed } from "nanostores";
+import { CORE_THEMES } from "./core-themes";
+import { persistendStorage } from "@/shared/store";
 
-const currentPalette = atom<Palette>({
-  primary: "#002b36",
-  accent: "#6c71c4",
-  text: "#eee8d5",
-});
+class ThemeStore {
+  theme = persistendStorage("theme", CORE_THEMES[0].name);
+  currentPalette = computed(
+    this.theme,
+    (name) =>
+      CORE_THEMES.find((palette) => palette.name === name) || CORE_THEMES[0]
+  );
 
-const generateStylesFromPalette = (palette: Palette): string => {
-  const primary = new Color(palette.primary);
-  const text = new Color(palette.text);
+  private opacify(color: string, opacity: number) {
+    return transparentize(1 - opacity, color);
+  }
 
-  const shadow = text.clone();
-  shadow.alpha = 0.03;
-
-  const border = text.clone();
-  border.alpha = 0.08;
-
-  const card = primary.clone();
-  card.lch.l += 7;
-
-  return `
+  private generateStylesFromPalette(palette: Palette): string {
+    return `
   :root {
-    --color-primary: ${primary};
-    --color-text: ${text};
-    --color-card: ${card};
-    --color-border: ${border};
-    --shadow1: 0 3px 10px 0 ${shadow};
+    --color-background: ${palette.background};
+    --color-foreground: ${palette.foreground};
+    --color-black: ${palette.black};
+    --color-red: ${palette.red};
+    --color-green: ${palette.green};
+    --color-yellow: ${palette.yellow};
+    --color-blue: ${palette.blue};
+    --color-magenta: ${palette.magenta};
+    --color-cyan: ${palette.cyan};
+    --color-white: ${palette.white};
   }
 `;
-};
+  }
+  watchAndGeneratePalette() {
+    const style = document.createElement("style");
+    document.head.appendChild(style);
 
-export const watchAndGeneratePallete = () => {
-  const style = document.createElement("style");
-  document.head.appendChild(style);
+    this.currentPalette.subscribe((palette) => {
+      style.innerHTML = this.generateStylesFromPalette(palette);
+    });
+  }
+}
 
-  currentPalette.subscribe((palette) => {
-    style.innerHTML = generateStylesFromPalette(palette);
-  });
-};
+const theme$ = new ThemeStore();
+
+export { CORE_THEMES, theme$ };

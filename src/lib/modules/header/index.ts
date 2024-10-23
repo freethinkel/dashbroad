@@ -1,3 +1,3 @@
-import Header from "./view/Header.svelte";
+import Header from "./views/Header.svelte";
 
 export { Header };
